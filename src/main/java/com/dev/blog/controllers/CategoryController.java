@@ -2,6 +2,7 @@ package com.dev.blog.controllers;
 
 import com.dev.blog.domain.dtos.CategoryDto;
 import com.dev.blog.domain.entities.Category;
+import com.dev.blog.mappers.CategoryMapper;
 import com.dev.blog.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,14 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> listCategories() {
-        List<Category> categories = categoryService.listCategories();
+        List<CategoryDto> categories = categoryService.listCategories()
+                .stream().map(categoryMapper::toCategoryDto)
+                .toList();
+                return ResponseEntity.ok(categories);
 
 
     }

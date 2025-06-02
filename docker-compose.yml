@@ -6,6 +6,7 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: changemeinprod!
+      POSTGRES_DB: blogdb  # Add this line
   adminer:
     image: adminer:latest
     restart: always

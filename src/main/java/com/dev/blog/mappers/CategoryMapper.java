@@ -2,6 +2,7 @@ package com.dev.blog.mappers;
 
 import com.dev.blog.domain.PostStatus;
 import com.dev.blog.domain.dtos.CategoryDto;
+import com.dev.blog.domain.dtos.CreateCategoryRequest;
 import com.dev.blog.domain.entities.Category;
 import com.dev.blog.domain.entities.Post;
 import org.mapstruct.Mapper;
@@ -17,6 +18,9 @@ public interface CategoryMapper {
     @Mapping(target = "postCount",source = "posts" , qualifiedByName = "calculatePostCount")
     CategoryDto toCategoryDto(Category category);
 
+    Category toEntity(CreateCategoryRequest request);
+
+
     @Named("calculatePostCount")
     default long calculatePostCount(List<Post> posts) {
         if (posts == null || posts.size() == 0) {
@@ -25,5 +29,7 @@ public interface CategoryMapper {
         return posts.stream().filter(post -> PostStatus.PUBLISHED.equals(post.getStatus()))
                 .count();
     }
+
+
 
 }

@@ -20,7 +20,7 @@ public class ApiErrorResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public class FiledError {
+    public static class FiledError {
         private String field;
         private String message;
     }

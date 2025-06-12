@@ -27,6 +27,6 @@ public class AuthController {
                 .token(token)
                 .expiresIn(86400)
                 .build();
-                return ResponseEntity.ok(Auth)
+                return ResponseEntity.ok(Auth);
     }
 }

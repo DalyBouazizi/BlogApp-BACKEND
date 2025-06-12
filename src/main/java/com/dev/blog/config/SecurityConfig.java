@@ -1,5 +1,8 @@
 package com.dev.blog.config;
 
+import com.dev.blog.domain.entities.User;
+import com.dev.blog.repositories.UserRepository;
+import com.dev.blog.security.BlogUserDetailsService;
 import com.dev.blog.security.JwtAuthenticationFilter;
 import com.dev.blog.services.AuthenticationService;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +28,20 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter(authenticationService);
     }
 
+    @Bean
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        BlogUserDetailsService blogUserDetailsService=  new BlogUserDetailsService(userRepository);
+        String email ="user@test.com";
+        userRepository.findByEmail(email).orElseGet(() -> {
+            User user = User.builder()
+                    .name("Test user")
+                    .email(email)
+                    .password(passwordEncoder().encode("password"))
+                    .build();
+            return userRepository.save(user);
+        });
+        return blogUserDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
